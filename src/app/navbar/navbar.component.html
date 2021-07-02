@@ -1,0 +1,57 @@
+    <nav class="navbar fixed-top navbar-main navbar-horizontal navbar-expand-lg navbar-light navbar-dark bg-gradient-primary">
+    <div class="container">
+        <a class="navbar-brand" href="#">Default Color</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-default">
+            <div class="navbar-collapse-header">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a href="javascript:void(0)">
+                            <img src="../../assets/img/brand/blue.png">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-default" aria-controls="navbar-default" aria-expanded="false" aria-label="Toggle navigation">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <ul class="navbar-nav ml-lg-auto" >
+                <li class="nav-item dropdown">
+                    <a class="nav-link nav-link-icon" href="#" id="navbar-default_dropdown_1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Les Fiches
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbar-default_dropdown_1">
+                        <a class="dropdown-item" routerLink="/fichereception" routerLinkActive="active">Fiche de Reception</a>
+                        <a class="dropdown-item" routerLink="/bonEntrees" routerLinkActive="active">Bon d'Entree</a>
+                        <a class="dropdown-item" routerLink="/fichesConditionnement" routerLinkActive="active">Fiches de conditionnement</a>
+                        <a class="dropdown-item" routerLink="/matsemb" routerLinkActive="active">Fiches de Contrôle du Matériel d’Emballage</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" routerLink="/responsables" routerLinkActive="active">
+                        Responsables
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" routerLink="/fournisseurs" routerLinkActive="active">
+                        Fournisseurs
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-icon" routerLink="/operateurs" routerLinkActive="active">
+                        Operateurs
+                    </a>
+                </li>
+                <li *ngIf="connect" class="nav-item d-none d-lg-block ml-lg-4 mt-2">
+                    <button type="button" class="btn btn-primary" (click)="Disconnect()">Disconnect</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

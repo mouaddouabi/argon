@@ -1,0 +1,175 @@
+<div class="header bg-gradient-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Icons</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Components</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Icons</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card container-fluid mt--6" style="width: 80%;margin: auto;">
+    <div class="card-header">
+      <h4 class="text-primary">Liste des Fiches de conditionnement</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive py-4">
+            <table class="table table-flush" id="datatable-basic">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Date de conditionnement</th>
+                        <th scope="col">N Lot de production</th>
+                        <th scope="col">N Lot d’emballage</th>
+                        <th scope="col">Quantité dattes conditionnée</th>
+                        <th scope="col">Humidité des dattes conditionnées</th>
+                        <th class="col-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let fiche of fichesTab">
+                        <td >{{fiche.dateCondi}}</td>
+                        <td >{{fiche.lot.codeLotProduction}}</td>
+                        <td >{{fiche.emballage.numLotEmb}}</td>
+                        <td>{{fiche.qteDateCondi}}</td>
+                        <td>{{fiche.humiditeDateCondi}}</td>
+                        <td >
+                            <button (click)="deleteFicheCond(fiche.codeCondi)" class="btn btn-outline-danger"><i class="fa fa-trash-alt" aria-hidden="true"></i></button>
+                            <button (click)="updateFicheCond(fiche.codeCondi)" class="btn btn-outline-info" style="margin-left: 10px"><i class="far fa-edit" aria-hidden="true"></i></button>
+                            <button (click)="print(fiche.codeCondi)" style="margin-left: 10px" class="btn btn-outline-default" printSectionId="fiche"[useExistingCss]="true" ngxPrint><i class="fa fa-print" aria-hidden="true"></i></button>
+                            <button (click)="Unites(fiche.codeCondi)" class="btn btn-outline-success" style="margin-left: 10px">Unites</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+<div class="card" style="width: 80%;margin: auto;">
+    <div class="card-header">
+        <h4 class="text-primary">Ajouter un Nouveau Fiche de conditionnement</h4>
+    </div>
+    <div class="card-body">
+        <div class="container">
+        <br>
+        <form (ngSubmit)="onSubmit()" ngNativeValidate>
+            <div class="form-group">
+                <label for="date">Date de conditionnement</label>
+                <input type="date" class="form-control" id="date" required [(ngModel)]="ficheCond.dateCondi" name="date">
+            </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="selectf">Numéro Lot de production</label>
+                    <select name="selectmodel" [(ngModel)]="ficheCond.lot" class="custom-select" id="selectf">
+                      <option *ngFor="let four of lots" [ngValue]="four">{{four.codeLotProduction}}</option>
+                  </select>
+                </div>
+                <div class="form-group col-6">
+                    <label for="selectf1">Numéro du lot d’emballage</label>
+                    <select name="selectmodel" [(ngModel)]="ficheCond.emballage" class="custom-select" id="selectf1">
+                      <option *ngFor="let emb of emballages" [ngValue]="emb">{{emb.numLotEmb}}</option>
+                  </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label for="quCond">Quantité dattes conditionnée</label>
+                    <input type="number" class="form-control" id="quCond" required [(ngModel)]="ficheCond.qteDateCondi" name="quCond">
+                </div>
+                <div class="form-group col-6">
+                    <label for="humiditeDateCondi">Humidité des dattes conditionnée</label>
+                    <input type="number" class="form-control" id="humiditeDateCondi" required [(ngModel)]="ficheCond.humiditeDateCondi" name="humiditeDateCondi">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Responsable_qualite">Responsable qualité <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheCond.responsable.nom}}</span></label>
+                <select name="Responsable_qualite" [(ngModel)]="ficheCond.responsable" class="custom-select" id="Responsable_qualite">
+                  <option *ngFor="let respo of responsablesqualite" [ngValue]="respo">{{respo.nom}}</option>
+                </select>
+            </div>
+            <button *ngIf="isAdd" type="submit" class="btn btn-outline-success">Submit</button>
+            <button *ngIf="!isAdd" type="submit" class="btn btn-outline-default">Submit</button>
+        </form>
+        </div>
+    </div>
+</div>
+<div class="card" style="display: none;">
+  <div class="card-body" style="max-width: 80%;">
+      <div class="container" id="fiche">
+          <table class="table table-bordered  mx-auto" style="width: 80%;">
+              <thead
+              
+              ></thead>
+              <tbody>
+                  <tr>
+                      <td rowspan="2" style="font-weight: bolder; text-align: center;padding-top: 38px;" >GIE XXXXXXXXXXXX</td>
+                      <td rowspan="2" style="font-weight: bolder;  text-align: center;padding-top: 38px;">Fiche de contrôle du conditionnement</td>
+                      <td >Date d’application : 2021</td>
+                  </tr>
+                  <tr>
+                      <td >Page : 1 </td>
+                  </tr>
+              </tbody>
+          </table>
+          <br><br><br>
+          <table class="" style="width: 80%;margin: auto;border: 1px solid grey;" id="emballagePrint">
+              <thead class="thead-inverse">
+                  <tr>
+                      <th>Date de conditionnement</th>
+                      <th>Numéro Lot de production</th>
+                      <th>Numéro du lot d’emballage</th>
+                      <th>Quantité dattes conditionnée</th>
+                      <th>Humidité des dattes conditionnées</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>{{ficheCondPrint.dateCondi}}</td>
+                      <td>{{ficheCondPrint.lot.codeLotProduction}}</td>
+                      <td>{{ficheCondPrint.emballage.numLotEmb}}</td>
+                      <td>{{ficheCondPrint.qteDateCondi}}</td>
+                      <td>{{ficheCondPrint.humiditeDateCondi}}</td>
+                  </tr>      
+          </table>     
+          <br><br>  <br>
+          <table class="" style="width: 80%;margin: auto;border: 1px solid grey;" id="emballagePrint1">
+              <thead class="thead-inverse">
+                  <tr>
+                      <th>Numéro de série des unités initiales</th>
+                      <th>Volume unité</th>
+                      <th>Nombre d’unités conditionnées</th>
+                      <th>Numéro de colis</th>
+                      <th>Nombre de barquettes par colis</th>
+                      <th>Nombre de colis</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let unit of ficheCondPrint.unites">
+                    <td >{{unit.numSerieUnitesInit}}</td>
+                    <td >{{unit.volumeUnite}}</td>
+                    <td >{{unit.nbreUnitesCondi}}</td>
+                    <td >{{unit.numColis}}</td>
+                    <td >{{unit.nbreBraquettesParColis}}</td>
+                    <td >{{unit.nbreColis}}</td>
+                  </tr>   
+              </tbody>    
+          </table>     
+          <br>  
+          <div style="margin-left: 96px;">
+              <p>Visa responsable approvisionnement : {{ficheCondPrint.responsable.nom}} {{ficheCondPrint.responsable.prenom}} </p>
+          </div>   
+      </div>
+  </div>
+</div>

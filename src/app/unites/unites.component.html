@@ -1,0 +1,100 @@
+<div class="header bg-gradient-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Icons</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Components</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Icons</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card container-fluid mt--6" style="width: 80%;margin: auto;">
+    <div class="card-header">
+      <h4 class="text-primary">Liste Des Unites</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive py-4">
+            <table class="table table-flush" id="datatable-basic">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Numéro de série des unités initiales</th>
+                <th scope="col">Volume unité</th>
+                <th scope="col">Nombre d’unités conditionnées</th>
+                <th scope="col">Numéro de colis</th>
+                <th scope="col">Nombre de barquettes par colis</th>
+                <th scope="col">Nombre de colis</th>
+                <th class="col-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let unit of unites">
+                <td >{{unit.numSerieUnitesInit}}</td>
+                <td >{{unit.volumeUnite}}</td>
+                <td >{{unit.nbreUnitesCondi}}</td>
+                <td >{{unit.numColis}}</td>
+                <td >{{unit.nbreBraquettesParColis}}</td>
+                <td >{{unit.nbreColis}}</td>
+                <td >
+                    <button (click)="deleteUnites(unit.numSerieUnitesInit)" class="btn btn-outline-danger"><i class="fa fa-trash-alt" aria-hidden="true"></i></button>
+                    <button (click)="updateUnites(unit.numSerieUnitesInit)" class="btn btn-outline-info" style="margin-left: 10px"><i class="far fa-edit" aria-hidden="true"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
+</div>
+<br>
+<div class="card" style="width: 80%;margin: auto;">
+    <div class="card-header">
+        <h4 class="text-primary">Ajouter une Nouvelle Unite</h4>
+    </div>
+    <div class="card-body">
+        <div class="container">
+        <br>
+        <form (ngSubmit)="onSubmit()" ngNativeValidate>
+            <div class="container">
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label for="volumeUnite">Volume unité</label>
+                        <input type="number" class="form-control" id="volumeUnite" required [(ngModel)]="unite.volumeUnite" name="volumeUnite">
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="nbreUnitesCondi">Nombre d’unités conditionnées</label>
+                        <input type="number" class="form-control" id="nbreUnitesCondi" required [(ngModel)]="unite.nbreUnitesCondi" name="nbreUnitesCondi">
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="numColis">Numéro de colis</label>
+                        <input type="number" class="form-control" id="numColis" required [(ngModel)]="unite.numColis" name="numColis">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="nbreBraquettesParColis">Nombre de barquettes par colis</label>
+                        <input type="number" class="form-control" id="nbreBraquettesParColis" required [(ngModel)]="unite.nbreBraquettesParColis" name="nbreBraquettesParColis">
+                    </div>
+                    <div class="form-group col-6">
+                        <label for="nbreColis">Nombre de colis</label>
+                        <input type="number" class="form-control" id="nbreColis" required [(ngModel)]="unite.nbreColis" name="nbreColis">
+                    </div>
+                </div>
+                <button *ngIf="isAdd" type="submit" class="btn btn-outline-primary">Submit</button>
+                <button *ngIf="!isAdd" type="submit" class="btn btn-outline-success">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+            

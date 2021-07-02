@@ -1,0 +1,151 @@
+<div class="header bg-gradient-primary pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 text-white d-inline-block mb-0">Icons</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="#">Components</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Icons</li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="#" class="btn btn-sm btn-neutral">New</a>
+            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="card container-fluid mt--6" style="width: 80%;margin: auto;">
+    <div class="card-header">
+        <h4 class="text-primary">Liste des Fiches de Contrôle du Matériel d’Emballage</h4>
+        </div>
+        <div class="card-body">
+        <div class="table-responsive py-4">
+            <table class="table table-flush" id="datatable-basic">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">N° Fiche</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Responsable</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let fiche of fichesTab">
+                    <td >{{fiche.codeEmbg}}</td>
+                    <td >{{fiche.date}}</td>
+                    <td >{{fiche.responsable.nom}}</td>
+                    <td >
+                        <button (click)="deleteFicheCond(fiche.codeEmbg)" class="btn btn-outline-danger"><i class="fa fa-trash-alt" aria-hidden="true"></i></button>
+                        <button (click)="updateFicheCond(fiche.codeEmbg)" class="btn btn-outline-info" style="margin-left: 10px"><i class="far fa-edit" aria-hidden="true"></i></button>
+                        <button (click)="print(fiche.codeEmbg)" style="margin-left: 10px" class="btn btn-outline-default" printSectionId="fiche"[useExistingCss]="true" ngxPrint><i class="fa fa-print" aria-hidden="true"></i></button>
+                        <button (click)="addEmballages(fiche.codeEmbg)" class="btn btn-outline-success" style="margin-left: 10px">Emballages</button>
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </div>    
+</div>
+<br>
+<div class="card" style="width: 80%;margin: auto;">
+    <div class="card-header">
+        <h4 class="text-primary">Ajouter un Nouveau Fiche d'Emballage</h4>
+    </div>
+    <div class="card-body">
+        <div class="container">
+        <br>
+        <form (ngSubmit)="onSubmit()" ngNativeValidate>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" class="form-control" id="date" required [(ngModel)]="ficheMatEmb.date" name="date">
+            </div>
+            <div class="form-group">
+                <label for="Responsable_qualite">Responsable qualité <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheMatEmb.responsable.nom}}</span></label>
+                <select name="Responsable_qualite" required [(ngModel)]="ficheMatEmb.responsable" class="custom-select" id="Responsable_qualite">
+                  <option *ngFor="let respo of responsablesqualite" [ngValue]="respo">{{respo.nom}}</option>
+                </select>
+            </div>
+            <button *ngIf="isAdd" type="submit" class="btn btn-outline-success">Submit</button>
+            <button *ngIf="!isAdd" type="submit" class="btn btn-outline-default">Submit</button>
+        </form>
+      </div>
+  </div>
+</div>
+<div class="card" style="display: none;">
+    <div class="card-body" style="max-width: 80%;">
+        <div class="container" id="fiche">
+            <table class="table table-bordered  mx-auto" style="width: 80%;">
+                <thead
+                
+                ></thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2" style="font-weight: bolder; text-align: center;padding-top: 38px;" >GIE XXXXXXXXXXXX</td>
+                        <td rowspan="2" style="font-weight: bolder;  text-align: center;padding-top: 38px;">Fiche de contrôle du matériel d’emballage</td>
+                        <td >Date d’application : 2021</td>
+                    </tr>
+                    <tr>
+                        <td >Page : 1 </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <div style="margin-left: 105px;">
+                <p>Date : {{ficheMatEmbPrint.date}}  </p>
+            </div>
+            <table class="" style="width: 80%;margin: auto;border: 1px solid grey;" id="emballagePrint">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Fournisseur</th>
+                        <th>Code fournisseur</th>
+                        <th>Numéro du lot d’emballage</th>
+                        <th>Type d’emballage</th>
+                        <th>Volume unité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emb of ficheMatEmbPrint.emballages">
+                      <td >{{emb.frEmb}}</td>
+                      <td >{{emb.codeFrEmb}}</td>
+                      <td >{{emb.numLotEmb}}</td>
+                      <td >{{emb.typeEmb}}</td> 
+                      <td >{{emb.volumeUnite}}</td>
+                    </tr>   
+                </tbody>    
+            </table>     
+            <br><br>  
+            <table class="" style="width: 80%;margin: auto;border: 1px solid grey;" id="emballagePrint1">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Numéro du lot d’emballage</th>
+                        <th>Conditions de stockage</th>
+                        <th>Date de conditionnement</th>
+                        <th>Opérateurs</th>
+                        <th>Lavage et séchage des emballages</th>
+                        <th>Actions correctives</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let emb of ficheMatEmbPrint.emballages">
+                      <td >{{emb.numLotEmb}}</td>
+                      <td >{{emb.condStockage}}</td>
+                      <td >{{emb.dateCond}}</td>
+                      <td >{{emb.operateur.nom}}</td>
+                      <td >{{emb.lavageSechageEmb}}</td>
+                      <td >{{emb.actionsCor}}</td>
+                    </tr>   
+                </tbody>    
+            </table>     
+            <br>  
+            <div style="margin-left: 105px;">
+                <p>Visa responsable approvisionnement : {{ficheMatEmbPrint.responsable.nom}} {{ficheMatEmbPrint.responsable.prenom}}  </p>
+            </div>   
+        </div>
+    </div>
+</div>    

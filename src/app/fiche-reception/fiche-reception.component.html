@@ -1,0 +1,370 @@
+<div class="header bg-gradient-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Icons</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="#">Components</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Icons</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="#" class="btn btn-sm btn-neutral">New</a>
+          <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card container-fluid mt--6" style="width: 80%;margin: auto;">
+      <div class="card-header">
+        <h4 class="text-primary">Liste des Fiches de Reception</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive py-4">
+          <table class="table table-flush" id="datatable-basic">
+          <thead class="thead-light">
+          <tr>
+            <th scope="col">Fournisseur</th>
+            <th scope="col">Transporteur </th>
+            <th scope="col">Region</th>
+            <th scope="col">Variété</th>
+            <th scope="col">Quantité livrée</th>
+            <th scope="col">Date de livraison</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fiche of fichesRec">
+            <td>{{fiche.fournisseur.nom}}</td>
+            <td>{{fiche.lot.transport.nomTranspt}}</td>
+            <td>{{fiche.lot.parcelle.ferme.region}}</td>
+            <td>{{fiche.lot.variete}}</td>
+            <td>{{fiche.qteLivree}}</td>
+            <td>{{fiche.lot.dateLivraison}}</td>
+            <td >
+              <button (click)="deleteFicheRec(fiche.codeRecep)" class="btn btn-outline-danger"><i class="fa fa-trash-alt"  aria-hidden="true"></i></button>
+              <button (click)="updateFicheRec(fiche.codeRecep)" class="btn btn-outline-info" style="margin-left: 10px"><i class="far fa-edit" aria-hidden="true"></i></button>
+              <button (click)="print(fiche.codeRecep)" style="margin-left: 10px" class="btn btn-outline-default" printSectionId="fiche"[useExistingCss]="true" ngxPrint><i class="fa fa-print" aria-hidden="true"></i></button>
+              <!-- <button (click)="open()" class="btn btn-danger"><i class="fa fa-trash" aria-hidden="true"></i></button> -->
+              
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+</div>
+
+<br>
+  <div class="card mb-3" style="width: 80%;margin: auto;">
+      <div class="card-header">
+        <h4 class="text-primary">Ajouter Une Nouvelle Fiche de Reception </h4>
+      </div>
+    <div class="card-body">
+    <div class="container">
+      <h4></h4>
+      <form (ngSubmit)="onSubmit()" ngNativeValidate>
+          <div class="form-group">
+            <label for="selectf">Fournisseur <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheRec.fournisseur.nom}}</span></label>
+            <select name="selectmodel" [(ngModel)]="ficheRec.fournisseur" class="custom-select" id="selectf" required>
+              <option *ngFor="let four of fournisseurs" [ngValue]="four">{{four.nom}}</option>
+            </select>
+          </div>
+           <div class="form-group">
+            <label for="selectmodel2">Ferme <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheRec.lot.parcelle.ferme.region}}</span></label>
+            <select name="selectmodel2" [(ngModel)]="ficheRec.lot.parcelle.ferme" class="custom-select" id="selectmodel2" required>
+              <option *ngFor="let ferm of ficheRec.fournisseur.ferme" selected="selected"  [ngValue]="ferm">{{ferm.region}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="selectmodel3">Variété</label>
+            <select class="custom-select" id="selectmodel3" required [(ngModel)]="ficheRec.lot.variete" name="selectmodel3">
+              <option *ngFor="let variete of varietes" [ngValue]="variete">{{variete}}</option>   
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="Transporteur">Transporteur </label>
+            <input type="text" class="form-control" id="Transporteur" required="required" [(ngModel)]="ficheRec.lot.transport.nomTranspt" name="Transporteur">
+          </div>
+          <div class="form-group">
+            <label for="camion">Matricule Camion </label>
+            <input type="text" class="form-control" id="camion" required [(ngModel)]="ficheRec.lot.transport.matricule" name="camion">
+          </div>
+          
+          <div class="form-group">
+            <label for="Date_de_recolte">Date de récolte</label>
+            <input type="date" class="form-control" id="Date_de_recolte" required [(ngModel)]="ficheRec.lot.dateRecolte" max="{{today|date:'yyyy-MM-dd'}}" name="Date_de_recolte">
+          </div>
+
+          <div class="form-group">
+            <label for="Quantite_livree">Quantité livrée</label>
+            <input type="number" class="form-control" id="Quantite_livree" required [(ngModel)]="ficheRec.qteLivree" name="Quantite_livree">
+          </div>
+          <div class="form-group">
+            <label for="Date_de_livraison">Date de livraison</label>
+            <input type="date" class="form-control" [min]="ficheRec.lot.dateRecolte" max="{{today|date:'yyyy-MM-dd'}}" id="Date_de_livraison" required [(ngModel)]="ficheRec.lot.dateLivraison" name="Date_de_livraison">
+          </div>
+          
+          <div class="form-group">
+            <label for="name">Dattes récoltées au sol (traces de terre)</label>
+            <input type="text" class="form-control" id="tracesTerre" required [(ngModel)]="ficheRec.lot.parcelle.tracesTerre" name="tracesTerre">
+          </div>
+          <div class="row">
+            <div class="form-group col-6">
+              <label for="name">Etat de fraîcheur</label>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Etat_de_fraîcheur" value="Bon" checked [(ngModel)]="ficheRec.lot.etatFraicheur">
+                  Bon
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Etat_de_fraîcheur" value="moyen"  [(ngModel)]="ficheRec.lot.etatFraicheur">
+                  moyen
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Etat_de_fraîcheur" value="médiocre "  [(ngModel)]="ficheRec.lot.etatFraicheur">
+                  médiocre 
+                </label>
+              </div>
+            </div>
+            <div class="form-group col-6">
+              <label for="Aspect_sanitaire">Aspect sanitaire</label>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Aspect_sanitaire" value="Bon" checked [(ngModel)]="ficheRec.lot.aspectSanitaire">
+                  Bon
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Aspect_sanitaire" value="moyen" [(ngModel)]="ficheRec.lot.aspectSanitaire">
+                  moyen
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input type="radio" class="form-check-input" required name="Aspect_sanitaire" value="médiocre " [(ngModel)]="ficheRec.lot.aspectSanitaire">
+                  médiocre  
+                </label>
+              </div>
+            </div>
+          </div>	
+          <table>
+            <tr>
+              <td><label>Stade de maturité</label></td>
+              <td>
+                <div class="form-group" style="margin-top: 12px;">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1 ml-2" required type="radio" name="Stade_de_maturite" value="Vert" [(ngModel)]="ficheRec.lot.maturite">  
+                      Vert
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio" name="Stade_de_maturite" value="tournante" [(ngModel)]="ficheRec.lot.maturite">  
+                      tournante
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio" name="Stade_de_maturite" value="mature" [(ngModel)]="ficheRec.lot.maturite">  
+                      mature
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio" name="Stade_de_maturite" value="sur-maturée" [(ngModel)]="ficheRec.lot.maturite">  
+                      sur-maturée
+                    </label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>            
+                <label>Fermentation</label>
+              </td>
+              <td>
+                <div class="form-group" style="margin-top: 12px">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1 ml-2" required type="radio" name="Fermentation" value="Oui" [(ngModel)]="ficheRec.lot.fermentation">  
+                      Oui
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio" name="Fermentation" value="Non" [(ngModel)]="ficheRec.lot.fermentation">  
+                      Non
+                    </label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>            
+                <label>Corps étrangers</label>
+              </td>
+              <td>
+                <div class="form-group" style="margin-top: 12px;">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1 ml-2" required type="radio" checked="checked" name="Corps_etrangers" onclick="corps_etr(true)" value="true">  
+                      Oui
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio"  name="Corps_etrangers" onclick="corps_etr(false)" value="false">  
+                      Non
+                    </label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>Humidité</label>
+              </td>
+              <td>
+                <div class="form-group" style="margin-top: 12px;">
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1 ml-2" required type="radio" name="Humidite" value="Oui" [(ngModel)]="ficheRec.lot.humidite" >  
+                      Oui
+                    </label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <label class="form-check-label">
+                      <input class="form-check-input mt-1" required type="radio" name="Humidite" value="Non" [(ngModel)]="ficheRec.lot.humidite" >  
+                      Non
+                    </label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+          <div class="form-group" id="blockCorps">
+            <label for="corps_etrangers">Si corps étrangers, lesquels:</label>
+            <input type="text" class="form-control" id="corps_etrangers" [(ngModel)]="ficheRec.lot.corpsEtrangers" name="corps_etrangers">
+          </div>
+          <div class="form-group">
+            <label for="comments">Appréciation et commentaires</label>
+            <input type="text" class="form-control" id="comments" [(ngModel)]="ficheRec.commentaire" name="comments">
+          </div>
+          <div class="form-group">
+            <label for="humidite_date">Humidité des dattes </label>
+            <input type="text" class="form-control" id="humidite_date" [(ngModel)]="ficheRec.humiditeDattes" name="humidite_date">
+          </div>
+          <div class="form-group">
+            <label for="Responsable_approvisionnement">Responsable d'approvisionnement <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheRec.responsable[0].nom}}</span></label>
+            <select name="Responsable_approvisionnement" required [(ngModel)]="ficheRec.responsable[0]" class="custom-select" id="Responsable_approvisionnement">
+              <option *ngFor="let respo of responsablesAppro" [ngValue]="respo">{{respo.nom}}</option>
+            </select>  
+          </div>
+          <div class="form-group">
+            <label for="Responsable_qualite">Responsable qualité <span *ngIf="!isAdd" style="font-weight: bold;">:{{ficheRec.responsable[1].nom}}</span></label>
+            <select name="Responsable_qualite" required [(ngModel)]="ficheRec.responsable[1]" class="custom-select" id="Responsable_qualite">
+              <option *ngFor="let respo of responsablesqualite" [ngValue]="respo">{{respo.nom}}</option>
+            </select>
+          </div>
+          <button *ngIf="isAdd" type="submit" class="btn btn-outline-success">Submit</button>
+          <button *ngIf="!isAdd" type="submit" class="btn btn-outline-default">Submit</button>
+      </form>
+    </div>
+  </div>
+  </div>
+
+  <div class="card" style="display: none;">
+    <div class="card-body" style="max-width: 80%;">
+        <div class="container" id="fiche">
+            <table class="table table-bordered  mx-auto" style="width: 80%;">
+                <thead
+                
+                ></thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2" style="font-weight: bolder; text-align: center;padding-top: 25px;" >GIE XXXXXXXXXXXX</td>
+                        <td rowspan="2" style="font-weight: bolder;  text-align: center;padding-top: 25px;">Fiche contrôle des dattes à la réception</td>
+                        <td >Date d’application : 2021</td>
+                    </tr>
+                    <tr>
+                        <td >Page : 1 </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="container mx-auto border" style="max-width: 60%;">
+                <span style="font-weight: bold;padding-left: 170px;">Identification dattes fraîches</span>
+                <br><br>
+                <p>Fournisseur (code)    :    {{fichePrint.fournisseur.codeFr}}</p>
+                <p>Transporteur camion   :    {{fichePrint.lot.transport.nomTranspt}}</p>
+                <p>N° du lot d’approvisionnement(ordre)      :{{fichePrint.lot.numLotAppro}}</p>
+                <p>Région                :    {{fichePrint.lot.parcelle.ferme.region}}</p>
+            </div>
+            <br>
+            <div class="container mx-auto border" style="max-width: 60%;">
+                <span style="font-weight: bold;padding-left: 170px;">Description dattes fraîches</span>
+                <br><br>
+                <p>Variété               :    {{fichePrint.lot.variete}}</p>
+                <p>Date de récolte       :    {{fichePrint.lot.dateRecolte}}</p>
+                <p>Quantité livrée (Kg)  :    {{fichePrint.qteLivree}}</p>
+                <p>Date de livraison     :    {{fichePrint.lot.dateLivraison}}</p>
+            </div>
+            <br>
+            <br>
+            <table class="table table-bordered  mx-auto" style="width: 80%;">
+                <thead>  
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="col-6" style="text-align: center;">Critères</th>
+                        <th class="col-6"></th>
+                    </tr>
+                    <tr>
+                        <td>Dattes récoltées au sol (traces de terre)</td>
+                        <td>{{fichePrint.lot.parcelle.tracesTerre}}</td>
+                    </tr>
+                    <tr>
+                        <td>Etat de fraîcheur </td>
+                        <td>{{fichePrint.lot.etatFraicheur}}</td>
+                    </tr>
+                    <tr>
+                        <td>Stade de maturité</td>
+                        <td>{{fichePrint.lot.maturite}}</td>
+                    </tr>
+                    <tr>
+                        <td>Fermentation</td>
+                        <td>{{fichePrint.lot.fermentation}}</td>
+                    </tr>
+                    <tr>
+                        <td>Corps étrangers</td>
+                        <td>{{fichePrint.lot.corpsEtrangers==null?'Non':'Oui'}}</td>
+                    </tr>
+                    <tr>
+                        <td>Humidité</td>
+                        <td>{{fichePrint.lot.humidite}}</td>
+                    </tr>
+                    <tr>
+                        <td>Aspect sanitaire</td>
+                        <td>{{fichePrint.lot.aspectSanitaire}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <p>Si corps étrangers, lesquels  :    {{fichePrint.lot.corpsEtrangers}}</p>
+            <p>Appréciation et commentaires  :    {{fichePrint.commentaire}}</p>
+            <p>-Humidité des dattes :   {{fichePrint.humiditeDattes}}</p>
+            <p class="float-left">Visa responsable approvisionnement: {{fichePrint.responsable[0].nom}}</p><p class="float-right">Visa Responsable qualité: {{fichePrint.responsable[1].nom}}</p>                                
+        </div>
+    </div>
+</div>

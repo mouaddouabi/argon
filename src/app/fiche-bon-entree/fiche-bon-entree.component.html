@@ -1,0 +1,256 @@
+<div class="header bg-gradient-primary pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-white d-inline-block mb-0">Icons</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="#">Components</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Icons</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="col-lg-6 col-5 text-right">
+          <a href="#" class="btn btn-sm btn-neutral">New</a>
+          <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card container-fluid mt--6" style="width: 80%;margin: auto;">
+    <div class="card-header">
+      <h4 class="text-primary">Liste Des Bon Entrees</h4>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive py-4">
+        <table class="table table-flush" id="datatable-basic">
+          <thead class="thead-light">
+              <tr>
+                <th class="col-2" scope="col">Fournisseur</th>
+                <th class="col-1" scope="col">N° lot approvisionnement</th>
+                <th class="col-1" scope="col">Total</th>
+                <th class="col-1" scope="col">Variété</th>
+                <th class="col-2" scope="col">Maturité des dattes</th>
+                <th scope="col">Etat sanitaire </th>
+                <th class="col-1" scope="col">Decision</th>
+                <th class="col-2" scope="col"></th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let fiche of fichesBonEntree">
+              <td>{{fiche.fournisseur.nom}}</td>
+              <td>{{fiche.lot.numLotAppro}}</td>
+              <td>{{fiche.total}}</td>
+              <td>{{fiche.lot.variete}}</td>
+              <td>{{fiche.lot.maturite}}</td>
+              <td>{{fiche.lot.aspectSanitaire}}</td>
+              <td>{{fiche.decision}}</td>
+              <td>
+                <button (click)="deleteFicheRec(fiche.numBon)" class="btn btn-outline-danger"><i class="fa fa-trash-alt" aria-hidden="true"></i></button>
+                <button (click)="updateFicheRec(fiche.numBon)" class="btn btn-outline-info" style="margin-left: 10px"><i class="far fa-edit" aria-hidden="true"></i></button>
+                <button (click)="print(fiche.numBon)" style="margin-left: 10px" class="btn btn-outline-default" printSectionId="fiche" [useExistingCss]="true" ngxPrint><i class="fa fa-print" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
+<br>
+<div class="card" style="width: 80%;margin: auto;">
+  <div class="card-header">
+    <h4 class="text-primary">Ajouter Un Nouveau Bon Entree</h4>
+  </div>
+  <div class="card-body">
+    <div class="container">
+      <form (ngSubmit)="onSubmit()" ngNativeValidate>
+          <div class="form-group" *ngIf="isAdd">
+              <label for="selectl">N° du lot d’approvisionnement</label>
+              <select name="selectmodel" [(ngModel)]="bonEntree.lot" class="custom-select" id="selectl" (change)="onchangeLot(bonEntree.lot)">
+                <option *ngFor="let lot of lots" [ngValue]="lot">{{lot.numLotAppro}}</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="Date">Date</label>
+              <input type="date" class="form-control" [min]="bonEntree.lot.dateLivraison" max="{{today|date:'yyyy-MM-dd'}}" id="Date" required [(ngModel)]="bonEntree.date" name="Date">
+          </div>
+            
+            <div class="form-group">
+              <label for="Fournisseur">Fournisseur</label>
+              <input type="text" class="form-control" id="Fournisseur" disabled required [(ngModel)]="bonEntree.fournisseur.nom" value="{{bonEntree.fournisseur.nom | json}}" name="Fournisseur">
+            </div>
+            <!-- <div class="form-group" *ngIf="isAdd">
+                <label for="selectf">Fournisseur</label>
+                <select name="selectmodel" [(ngModel)]="fournisseur" class="custom-select" id="selectf" (change)="onchange(fournisseur.id)">
+                  <option *ngFor="let four of fournisseurs | async" [ngValue]="four">{{four.nom}}</option>
+              </select>
+            </div> -->
+            <!-- <div class="form-group" *ngIf="!isAdd">
+              <label for="Fournisseur">Fournisseur</label>
+              <input type="text" class="form-control" id="Fournisseur" disabled [(ngModel)]="bonEntree.fournisseur.nom" name="Fournisseur">
+            </div> -->
+            <div class="form-group">
+                <label for="Total">Total</label>
+                <input type="number" class="form-control" disabled id="Region" required [(ngModel)]="bonEntree.total"  name="Total">
+            </div>
+            <div class="form-group">
+              <label for="Variété">Variété</label>
+              <input type="text" class="form-control" disabled id="Variété" required [(ngModel)]="bonEntree.lot.variete" name="Variété">
+            </div>  
+              <table>
+                <tr>
+                  <td><label>Stade de maturité</label></td>
+                  <td>
+                    <div class="form-group" style="margin-top: 12px;">
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input mt-1 ml-2" type="radio" name="Stade_de_maturite" value="Vert" [(ngModel)]="bonEntree.lot.maturite">  
+                          Vert
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input mt-1" type="radio" name="Stade_de_maturite" value="tournante" [(ngModel)]="bonEntree.lot.maturite">  
+                          tournante
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input mt-1" type="radio" name="Stade_de_maturite" value="mature" [(ngModel)]="bonEntree.lot.maturite">  
+                          mature
+                        </label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <label class="form-check-label">
+                          <input class="form-check-input mt-1" type="radio" name="Stade_de_maturite" value="sur-maturée" [(ngModel)]="bonEntree.lot.maturite">  
+                          sur-maturée
+                        </label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Aspect_sanitaire">Aspect sanitaire</label>
+                    </td>
+                    <td>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <div class="form-check form-check-inline">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input mt-1 ml-2" name="Aspect_sanitaire" value="Bon" checked [(ngModel)]="bonEntree.lot.aspectSanitaire">
+                                Bon
+                              </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input mt-1" name="Aspect_sanitaire" value="moyen" [(ngModel)]="bonEntree.lot.aspectSanitaire">
+                                moyen
+                              </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <label class="form-check-label">
+                                <input type="radio" class="form-check-input mt-1" name="Aspect_sanitaire" value="mediocre " [(ngModel)]="bonEntree.lot.aspectSanitaire">
+                                médiocre 
+                              </label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Decision">Decision</label>
+                    </td>
+                    <td>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                <input type="radio" class="form-check-input mt-1 ml-2" name="Decision" required="required" value="Acceptation" [(ngModel)]="bonEntree.decision">
+                                Acceptation
+                                </label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <label class="form-check-label">
+                                <input type="radio" class="form-check-input mt-1" name="Decision" required="required" value="Rejet" [(ngModel)]="bonEntree.decision">
+                                Rejet 
+                                </label>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+              </table>
+            <div class="form-group">
+                <label for="Remarque">Remarque</label>
+                <input type="text" class="form-control" id="Remarque" [(ngModel)]="bonEntree.remarqueBon" name="Remarque">
+            </div>
+            <div class="form-group">
+              <label for="Responsable_approvisionnement">Responsable d'approvisionnement <span *ngIf="!isAdd" style="font-weight: bold;">:{{bonEntree.responsable.nom}}</span></label>
+              <select name="Responsable_approvisionnement" [(ngModel)]="bonEntree.responsable" class="custom-select" id="Responsable_approvisionnement">
+                <option *ngFor="let respo of responsablesAppro" [ngValue]="respo">{{respo.nom}}</option>
+              </select>  
+            </div>
+            <button *ngIf="isAdd" type="submit" class="btn btn-outline-success">Submit</button>
+            <button *ngIf="!isAdd" type="submit" class="btn btn-outline-default">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="card border-primary" style="max-width: 80%;display: none;" >
+  <div class="card-body" id="fiche">  
+    <div  style="margin: auto;">
+        <h4 class="card-title" style="text-align: center;font-weight: bolder;">BON ENTREE DES DATTES</h4>
+        <br>
+        <br>
+        <div style="max-width: 80%;margin: auto;">
+            <p class="card-text ml-5">Bon n°   :{{bonEntreePrint.numBon}} </p>
+            <p class="card-text ml-5">Date     : {{bonEntreePrint.date}}</p>
+            <br><br>            
+            <p class="card-text ml-5">reçu de M. {{bonEntreePrint.fournisseur.nom}}</p>
+            <br>
+            <p class="card-text ml-5">Agriculteur à : {{bonEntreePrint.lot.parcelle.ferme.region}}</p>
+            <p class="card-text ml-5">Un total de : {{bonEntreePrint.total}} Kg</p>
+        </div>
+        <br>
+        <h5 class="card-title" style="text-align: center;text-decoration: underline;">CARACTÉRISTIQUES DU PRODUIT</h5>
+        <br>
+        <div style="max-width: 80%;margin: auto;margin-left: 170px;">
+            <table style="width: 80%;" class="container">
+                    <tr class="row">
+                        <td class="col-4">Variété : </td>
+                        <td class="col-8">
+                          {{bonEntreePrint.lot.variete}}
+                        </td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-4">Maturité des dattes :</td>
+                        <td class="col-8" style="display: inline;">Vertes <i *ngIf="bonEntreePrint.lot.maturite=='Vert'" class="fas fa-check-square ml-2 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.maturite!='Vert'" class="far fa-square ml-2 mr-3" aria-hidden="true"></i>tournantes<i *ngIf="bonEntreePrint.lot.maturite=='tournante'" class="fas fa-check-square ml-3 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.maturite!='tournante'" class="far fa-square ml-3 mr-3" aria-hidden="true"></i>sur maturées<i *ngIf="bonEntreePrint.lot.maturite=='mature'" class="fas fa-check-square ml-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.maturite!='mature'" class="far fa-square ml-3" aria-hidden="true"></i></td>
+                    </tr>
+                    <tr class="row">
+                        <td class="col-4">Etat sanitaire :{{bonEntreePrint.lot.aspectSanitaire}}</td>
+                        <td class="col-8" >
+                            <span style="margin-right: 14px;">Bon</span><i *ngIf="bonEntreePrint.lot.aspectSanitaire=='Bon'" class="fas fa-check-square ml-3 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.aspectSanitaire!='Bon'" class="far fa-square ml-3 mr-3" aria-hidden="true"></i>
+                            <span style="margin-right: 18px;margin-left: 5px;">Moyen</span><i *ngIf="bonEntreePrint.lot.aspectSanitaire=='moyen'" class="fas fa-check-square ml-4 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.aspectSanitaire!='moyen'" class="far fa-square ml-4 mr-3" aria-hidden="true"></i>
+                            <span style="margin-right: 22px;margin-left: 4px;">Passable</span><i *ngIf="bonEntreePrint.lot.aspectSanitaire=='mediocre'" class="fas fa-check-square ml-4" aria-hidden="true"></i><i *ngIf="bonEntreePrint.lot.aspectSanitaire!='mediocre'" class="far fa-square ml-4" aria-hidden="true"></i>
+                        </td>
+                    </tr>
+                    <br>
+                    <tr class="row">
+                        <td class="col-4">Decision : </td>
+                        <td class="col-8">
+                            <span style="margin-right: 12px;">Acceptation</span><i *ngIf="bonEntreePrint.decision=='Acceptation'" class="fas fa-check-square ml-3 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.decision!='Acceptation'" class="far fa-square ml-3 mr-3" aria-hidden="true"></i>
+                            <span style="margin-right: 19px;margin-left: 5px;">Rejet</span><i *ngIf="bonEntreePrint.decision=='Rejet'" class="fas fa-check-square ml-4 mr-3" aria-hidden="true"></i><i *ngIf="bonEntreePrint.decision!='Rejet'" class="far fa-square ml-4 mr-3" aria-hidden="true"></i>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+        <br>
+        <div style="max-width: 80%;margin: auto;">
+            <p class="card-text ml-5">Remarque : {{bonEntreePrint.remarqueBon}}</p>
+            <p class="card-text ml-5">"L'apporteur certifie avoir respecté les conditions de production conformes avec la réglementation"</p>
+            <p class="card-text ml-5">Visa responsable approvisionnement : {{bonEntreePrint.responsable.nom}} {{bonEntreePrint.responsable.prenom}} </p>
+        </div>
+    </div>
+  </div>
+</div>
